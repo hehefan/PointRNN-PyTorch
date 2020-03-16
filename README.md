@@ -14,7 +14,7 @@ If you find our work useful in your research, please consider citing:
 ## License
 The code is released under MIT License.
 ## Installation
-Compile the CUDA layers for [PointNet++](http://arxiv.org/abs/1706.02413), CD and EMD:
+Compile the CUDA layers for [PointNet++](http://arxiv.org/abs/1706.02413):
 ```
     cd modules
     python setup.py install
