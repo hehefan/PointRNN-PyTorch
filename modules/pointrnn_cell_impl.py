@@ -45,7 +45,7 @@ class PointSpatioTemporalCorrelation(nn.Module):
         idx = pointnet2_utils.ball_query(self.radius, self.nsamples, P2, P1)                            # (B, npoint, nsample)
 
         # 2.1 Group P2 points
-        P2_flipped = P1.transpose(1, 2).contiguous()                                                    # (B, 3, npoint)
+        P2_flipped = P2.transpose(1, 2).contiguous()                                                    # (B, 3, npoint)
         P2_grouped = pointnet2_utils.grouping_operation(P2_flipped, idx)                                # (B, 3, npoint, nsample)
         # 2.2 Group P2 states
         S2_grouped = pointnet2_utils.grouping_operation(S2, idx)                                        # (B, C, npoint, nsample)
@@ -214,7 +214,7 @@ class PointLSTMCell(nn.Module):
         F = self.f_corr(P1, P2, X1, H2)
         O = self.o_corr(P1, P2, X1, H2)
         C_new = self.c_corr_new(P1, P2, X1, H2)
-        C_old = self.c_corr_old(P1, P2, None, H2)
+        C_old = self.c_corr_old(P1, P2, None, C2)
 
         I = self.sigmoid(I)
         F = self.sigmoid(F)
