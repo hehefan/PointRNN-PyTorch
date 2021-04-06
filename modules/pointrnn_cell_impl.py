@@ -66,9 +66,9 @@ class PointSpatioTemporalCorrelation(nn.Module):
         S1 = self.fc(correlation)
 
         # 6. Pooling
-        S1 = F.max_pool2d(S1, kernel_size=[1, S1.size(3)])
+        S1 = torch.max(input=S1, dim=-1, keepdim=False)[0]
 
-        return S1.squeeze(-1)
+        return S1
 
 
 class PointRNNCell(nn.Module):
