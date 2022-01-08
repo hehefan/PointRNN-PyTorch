@@ -26,7 +26,7 @@ class PointSpatioTemporalCorrelation(nn.Module):
         self.nsamples = nsamples
         self.in_channels = in_channels
 
-        self.fc = pt_utils.Conv2d(in_size=in_channels+out_channels+3, out_size=out_channels, activation=None, bn=None)
+        self.fc = pt_utils.Conv2d(in_size=in_channels+out_channels+3, out_size=out_channels, activation=nn.ReLU(inplace=True), bn=None)
 
     def forward(self, P1: torch.Tensor, P2: torch.Tensor, X1: torch.Tensor, S2: torch.Tensor) -> (torch.Tensor):
         r"""
@@ -160,6 +160,8 @@ class PointGRUCell(nn.Module):
             S_new = R*S_old
         else:
             S_new = torch.cat(tensors=[X1, R*S_old], dim=1)
+
+        S_new = self.fc(S_new)
 
         S_new = self.tanh(S_new)
 

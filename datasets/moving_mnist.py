@@ -51,9 +51,9 @@ def random_trajectory(image_size, seq_length, step_length):
     start_x = (canvas_size * start_x).astype(np.int32)
     return start_y, start_x
 
-class MMNIST(Dataset):
-    def __init__(self, root='data/mnist', seq_length=20, num_digits=1, image_size=64, step_length=0.1, num_points=128, pixel_threshold=16, train=True):
-        super(MMNIST, self).__init__()
+class TrainDataset(Dataset):
+    def __init__(self, root='data/mnist', seq_length=20, num_digits=1, image_size=64, step_length=0.1, num_points=128, pixel_threshold=16):
+        super(TrainDataset, self).__init__()
         self.seq_length = seq_length
         self.num_digits = num_digits
         self.image_size = image_size
@@ -61,10 +61,7 @@ class MMNIST(Dataset):
         self.step_length = step_length
         self.pixel_threshold = pixel_threshold
 
-        if train:
-            file_path = os.path.join(root, 'train-images-idx3-ubyte.gz')
-        else:
-            file_path = os.path.join(root, 't10k-images-idx3-ubyte.gz')
+        file_path = os.path.join(root, 'train-images-idx3-ubyte.gz')
         with gzip.open(file_path, 'r') as f:
             self.data = np.frombuffer(f.read(), np.uint8, offset=16).reshape(-1, 28, 28)
 
@@ -103,4 +100,19 @@ class MMNIST(Dataset):
         cloud_sequence2D = np.stack(cloud_sequence, axis=0)
         cloud_sequence3D = np.concatenate((cloud_sequence2D, np.zeros((self.seq_length, self.num_points, 1), dtype=cloud_sequence2D.dtype)),2)
 
-        return cloud_sequence3D.astype(np.float32), cloud_sequence3D[self.seq_length//2:,:,:].astype(np.float32)
+        return cloud_sequence3D.astype(np.float32)
+
+class TestDataset(Dataset):
+    def __init__(self, root='data/test-1mnist-64-128point-20step.npy'):
+        super(TestDataset, self).__init__()
+
+        data = np.load(root).astype(np.float32)
+
+        self.data = np.concatenate((data, np.zeros((data.shape[0], data.shape[1], data.shape[2], 1), dtype=data.dtype)),3)
+
+    def __len__(self):
+        return self.data.shape[0]
+
+    def __getitem__(self, idx):
+
+        return self.data[idx]
