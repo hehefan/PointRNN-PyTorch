@@ -14,7 +14,6 @@ from pointnet2 import *
 from modules.pointnet2_utils import QueryAndGroup, furthest_point_sample, gather_operation
 from modules.pointnet2_modules import PointnetFPModule
 from modules.pointrnn_cell_impl import PointRNNCell, PointGRUCell, PointLSTMCell
-from modules.point_local_transformer_rnn_cell_impl import PointLocalTransformerRNNCell
 
 class PointRNN(nn.Module):
     def __init__(self, radius=4.0, num_samples=4, subsampling=2):
